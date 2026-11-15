@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const {
     addProduct,
@@ -6,12 +6,13 @@ const {
     getProduct,
     updateProduct,
     deleteProduct
-} = require("../controllers/productControlers");
+} = require('../controllers/productControlers');
+const { authenticateJWT, authorizeRoles } = require('../Middleware/authMiddleware');
 
-router.post("/add", addProduct);
-router.get("/get", getInventory);
-router.get("/get/:id", getProduct);
-router.put("/update/:id", updateProduct);
-router.delete("/delete/:id", deleteProduct);
+router.post('/add', authenticateJWT, authorizeRoles('admin', 'manager'), addProduct);
+router.get('/get', authenticateJWT, getInventory);
+router.get('/get/:id', authenticateJWT, getProduct);
+router.put('/update/:id', authenticateJWT, authorizeRoles('admin', 'manager'), updateProduct);
+router.delete('/delete/:id', authenticateJWT, authorizeRoles('admin'), deleteProduct);
 
 module.exports = router;
